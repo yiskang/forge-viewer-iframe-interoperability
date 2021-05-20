@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" />
+        <meta name="author" content="Eason Kang" />
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="https://github.com/Autodesk-Forge/learn.forge.viewmodels/raw/master/img/favicon.ico">
+
+        <title>Autodesk Forge Viewer Element Locator Demo - Iframe</title>
+        <style>
+            body {
+              margin: 0;
+              padding: 0;
+            }
+      
+            table {
+              position: absolute;
+            }
+
+            iframe {
+                margin-top: 28px;
+                width: 100%;
+                height: calc(100% - 28px);
+            }
+          </style>
+    </head>
+    <body>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <td>
+                        <a class="ifc-element-item" href="#" data-guid="2cgXCjpDT0ZxBvxMSr3pfm" data-idType="IfcGUID">Roof 1</a>
+                    </td>
+                    <td>
+                        <a class="ifc-element-item"  href="#" data-guid="2OulbipBrAkwQNv_KJRV9c" data-idType="IfcGUID">Wall 1</a>
+                    </td>
+                    <td>
+                        <a class="ifc-element-item"  href="#" data-guid="3lIj7B0LnBjf0mvxk2zuuc" data-idType="IfcGUID">Column 1</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <iframe id="forge-viewer-iframe" src="viewer/?urn=dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6ZXh0cmFjdC1hdXRvZGVzay1pby0yMDE3bGt3ZWo3eHBiZ3A2M3g0aGwzMzV5Nm0yNm9ha2dnb2YvcmFjX2Jhc2ljX3NhbXBsZV9wcm9qZWN0LmlmYw"></iframe>
+        <script>
+            document.addEventListener(
+                'DOMContentLoaded',
+                () => {
+                    const viewerIframe = document.getElementById('forge-viewer-iframe');
+                    const ifcElemItems = document.querySelectorAll('a.ifc-element-item');
+                    for(let i=0; i<ifcElemItems.length; i++) {
+                        const item = ifcElemItems[i];
+                        item.addEventListener(
+                            'click',
+                            (event) => {
+                                event.preventDefault();
+
+                                const guid = event.target.getAttribute('data-guid');
+                                const idType = event.target.getAttribute('data-idType');
+
+                                if (!idType || !guid) return;
+
+                                const iframeWind = viewerIframe.contentWindow;
+                                iframeWind.NOP_VIEWER.fireEvent({
+                                    type: iframeWind.Autodesk.ADN.ElementLocator.Event.LOCATE_ELEMENT_EVENT,
+                                    idType,
+                                    guid
+                                });
+                            });
+                    }
+                });
+        </script>
+    </body>
+</html>
